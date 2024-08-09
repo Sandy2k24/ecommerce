@@ -85,16 +85,16 @@ const AccordionMenu = () => {
   // ];
 
   return (
-    <div className="accordion-menu">
-      <h2>Categories</h2>
+    <div className="accordion-menu ">
+      <h2 className=''>Categories</h2>
       <ul>
         {menuItems.map((item, index) => (
           <li key={index}>
-            <div onClick={() => toggleItem(index)} className="menu-item">
-              {item.category}
+            <div onClick={() => toggleItem(index)} className="menu-item ">
               {item.subcategories.length > 0 && (
                 activeIndex === index ? <FaChevronDown /> : <FaChevronRight />
               )}
+              {item.category}
             </div>
             {activeIndex === index && item.subcategories.length > 0 && (
               <ul className="submenu">
