@@ -14,6 +14,7 @@ import {
 import ErrorPage from './Components/ErrorPage';
 import HomePage from './Pages/Home/HomePage';
 import Catalogue from './Pages/Catalogue/Catalogue';
+import Cart from './Pages/Cart/Cart.jsx';
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
         element: <HomePage />
       },
       {
+        path: "cart",
+        element: <Cart/>
+      },
+      {
         path: "catalogue",
         element:<Catalogue />
       }
@@ -44,3 +49,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </Provider>
   </React.StrictMode>,
 )
+
+
+{/* <div className="w-full flex justify-center items-center">
+      <div className="text-center">
+        <img src="https://t3.ftcdn.net/jpg/04/76/93/14/360_F_476931472_LAGw6ZUxORq3FtjP9gRR8YLJcfrCrIFs.jpg" alt="Empty cart" className="w-64 mx-auto" />
+        <h6 className="text-sm mb-10">No Items Found</h6>
+      </div>
+    </div> */}

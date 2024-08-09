@@ -13,7 +13,7 @@ import {
 import { MdArrowDropDown, MdAccountCircle, MdEmail } from "react-icons/md";
 import { RxCross1 } from "react-icons/rx";
 import { RiInformation2Fill } from "react-icons/ri";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MdMenu } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 const NavBar = () => {
@@ -276,19 +276,23 @@ const NavBar = () => {
           </div>
 
           {/* Button for big screens (bove 1024px) */}
+          <Link to={`/ecommerce/cart`}>
           <button className="hidden lg:inline-flex items-center gap-2 text-black  ">
             <span>
               <FaShoppingCart />
             </span>
             Cart
           </button>
+          </Link>
 
           {/* Button for small screens (below 1024px) */}
+          <Link to={`/ecommerce/cart`}>
           <button className="inline-flex lg:hidden items-center text-white">
             <span className="text-xl ">
               <FaShoppingCart />
             </span>
           </button>
+          </Link>
         </div>
       </div>
 
