@@ -13,7 +13,7 @@ import {
 import { MdArrowDropDown, MdAccountCircle, MdEmail } from "react-icons/md";
 import { RxCross1 } from "react-icons/rx";
 import { RiInformation2Fill } from "react-icons/ri";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { MdMenu } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 import axios from "axios";
@@ -89,7 +89,7 @@ const NavBar = () => {
               title: category.name,
               items: subcategories.map((sub) => ({
                 text: sub.name,
-                href: `/#/subcategory/${sub.name}`,
+                href: `/ecommerce/catalogue`,
               })),
             });
           });
@@ -285,9 +285,9 @@ const NavBar = () => {
 
         {/* Logo Section */}
         <div className="flex items-center flex-shrink-0 ">
-          <a href="/ecommerce/home">
+          <NavLink to="/ecommerce/home">
             <img src={logo} alt="Logo" className="h-[38px] lg:h-[60px]" />
-          </a>
+          </NavLink>
         </div>
 
         {/* Search Form */}
