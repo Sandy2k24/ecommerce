@@ -1,0 +1,18 @@
+/* Ensure horizontal scrolling for the Shop by Category section */
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari, and Opera */
+  }
+  
+  .flex-nowrap {
+    flex-wrap: nowrap;
+  }
+  
+  .overflow-x-auto {
+    overflow-x: auto;
+  }
+  

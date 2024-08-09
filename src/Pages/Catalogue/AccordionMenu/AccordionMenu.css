@@ -1,0 +1,53 @@
+.accordion-menu {
+    font-family: Arial, sans-serif;
+    max-width: 300px; /* Adjust as needed */
+  }
+  
+  .accordion-menu h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+  }
+  
+  .accordion-menu ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .accordion-menu .menu-item {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    transition: all 0.3s ease;
+  }
+  
+  .accordion-menu .menu-item.active {
+    border-left-color: red;
+    font-weight: bold;
+    color: red;
+  }
+  
+  .accordion-menu .menu-item:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .accordion-menu .submenu {
+    padding-left: 10px;
+    /* border-left: 1px solid #ccc; */
+    margin-top: 5px;
+    /* margin-left: 10px; */
+  }
+
+  .accordion-menu .submenu li{
+    padding: 10px 0;
+  }
+  
+  .accordion-menu .submenu li:hover {
+    background-color: #f0f0f0;
+  }
+  
