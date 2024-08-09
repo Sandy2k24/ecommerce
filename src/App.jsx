@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import PopUp from "./Components/PopUp/PopUp"
 import NavBar from './Components/NavBar';
 import Footer from './Components/Footer';
-import Card from "./Components/Card/Card";
+// import Card from "./Components/Card/Card";
 import ForgetPass from "./Components/ForgetPass/Forgetpass";
 // import  Login  from "./Components/Login/Login";
 import Signup from "./Components/Signup/Signup";

@@ -1,0 +1,29 @@
+/* input[type='range'] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    border-radius: 5px;
+    background: #D8e0F3;
+    outline: none;
+    opacity: 0.9;
+    transition: opacity .2s;
+  }
+  
+  input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #BE0500;
+    cursor: pointer;
+  }
+  
+  input[type='range']::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #BE0500;
+    cursor: pointer;
+  }
+   */
