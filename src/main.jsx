@@ -12,7 +12,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import ErrorPage from './Components/ErrorPage';
-import HomePage from './Pages/home/HomePage';
+import HomePage from './Pages/Home/HomePage';
 import Catalogue from './Pages/Catalogue/Catalogue';
 
 const router = createBrowserRouter([
