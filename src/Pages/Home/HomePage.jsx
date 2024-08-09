@@ -271,11 +271,11 @@ const HomePage = () => {
 
       {/* Subcategories */}
       <div className="relative overflow-hidden my-8">
-        {heading.map((title, index) => (
+        {menuItems.map((item, index) => (
           <SubCatHome
             key={index}
-            heading={title}
-            subCategories={subCategories}
+            heading={item.category}
+            subCategories={item.subcategories}
           />
         ))}
       </div>
