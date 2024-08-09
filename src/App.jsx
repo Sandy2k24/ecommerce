@@ -18,7 +18,7 @@ export default function App() {
 
       <NavBar />
       {/* <Menu /> */}
-      <div id="detail">
+      <div className=" pt-[139px] lg:pt-[140px]" id="detail">
         <Outlet />
       </div>
       <Footer />

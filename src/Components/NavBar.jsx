@@ -39,65 +39,70 @@ const NavBar = () => {
     setIsMenuOpen(false);
   };
 
-
-
-
   const [menuItems, setMenuItems] = useState([]);
 
   // Fetch categories
   const fetchCategories = async () => {
-   try {
-     const response = await axios.get(`${SITE_CONFIG.apiIP}/api/menu`, {
-       headers: {
-         Authorization: `Bearer ${SITE_CONFIG.apiToken}`,
-       },
-     });
-     console.log(response.data)
-     return response.data;
-   } catch (error) {
-     console.error('Error fetching categories:', error);
-     setError('Failed to fetch categories.');
-   }
- };
+    try {
+      const response = await axios.get(`${SITE_CONFIG.apiIP}/api/menu`, {
+        headers: {
+          Authorization: `Bearer ${SITE_CONFIG.apiToken}`,
+        },
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      setError("Failed to fetch categories.");
+    }
+  };
 
-  
   const fetchSubcategories = async (category) => {
-   try {
-     const response = await axios.get(`${SITE_CONFIG.apiIP}/api/subcategory?category=${category}`, {
-       headers: {
-         Authorization: `Bearer ${SITE_CONFIG.apiToken}`,
-       },
-     });
-     return response.data;
-   } catch (error) {
-     console.error('Error fetching subcategories:', error);
-   }
- };
+    try {
+      const response = await axios.get(
+        `${SITE_CONFIG.apiIP}/api/subcategory?category=${category}`,
+        {
+          headers: {
+            Authorization: `Bearer ${SITE_CONFIG.apiToken}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching subcategories:", error);
+    }
+  };
 
- // Build menuItems from categories and subcategories
- const buildMenuItems = async () => {
-   try {
-     const categories = await fetchCategories();
-     if (!categories) return;
-     const activeCategories = categories.filter(category => category.status === 'active');
-     setCategory(activeCategories)
-     const items = await Promise.all(activeCategories.map(async (category) => {
-       const subcategories = await fetchSubcategories(category.name);
-       return {
-         category: category.name,
-         subcategories: subcategories?.filter(sub => sub.status === 'active').map(sub => sub) || [],
-       };
-     }));
+  // Build menuItems from categories and subcategories
+  const buildMenuItems = async () => {
+    try {
+      const categories = await fetchCategories();
+      if (!categories) return;
+      const activeCategories = categories.filter(
+        (category) => category.status === "active"
+      );
+      setCategory(activeCategories);
+      const items = await Promise.all(
+        activeCategories.map(async (category) => {
+          const subcategories = await fetchSubcategories(category.name);
+          return {
+            category: category.name,
+            subcategories:
+              subcategories
+                ?.filter((sub) => sub.status === "active")
+                .map((sub) => sub) || [],
+          };
+        }));
 
-     setMenuItems(items);
-   } catch (err) {
-     console.log(err)
-   } 
- };
+      setMenuItems(items);
+    } catch (err) {
+      console.log(err)
+    }
+  };
 
- useEffect(() => {
-   buildMenuItems();
- }, []);
+  useEffect(() => {
+    buildMenuItems();
+  }, []);
 
 
 
@@ -191,8 +196,14 @@ const NavBar = () => {
     setOpenDropdown(openDropdown === id ? null : id);
   };
   return (
-    <nav className=" no-scrollbar bg-red-600 lg:bg-gray-100 fixed z-30 w-full">
-      <div className=" bg-red-600 lg:bg-gray-100  h-[58px] lg:h-[70px] container mx-auto flex items-center justify-between lg:justify-evenly px-[12px] lg:px-[40px] gap-20  ">
+    <nav
+      style={{ background: "#be0601" }}
+      className=" no-scrollbar  lg:bg-gray-100 fixed z-30 w-full"
+    >
+      <div
+        className="  lg:bg-gray-100  h-[58px] lg:h-[70px] container mx-auto flex items-center justify-between lg:justify-evenly px-[12px] lg:px-[40px] gap-20  "
+        // style={{ background: "#be0601" }}
+      >
         {/* Toggle Icon for Mobile View */}
         <button
           className="lg:hidden p-2 text-white lg:text-black"
@@ -391,7 +402,7 @@ const NavBar = () => {
         </form>
       </div>
 
-      <div className="hidden lg:flex bg-gray-100 lg:bg-red-600 h-[50px] relative space-x-4  items-center justify-between lg:justify-evenly text-white  text-base px-[40px]">
+      <div className="hidden lg:flex bg-gray-100 lg:bg-custom-red h-[50px] relative space-x-4  items-center justify-between lg:justify-evenly text-white  text-base px-[40px]">
         {dropdowns.map(({ id, title, items }) => (
           // <div key={id} className={`relative ${id === 1 ? 'block lg:hidden' : ' hidden lg:block'}`}>
           <div key={id} className="relative ">
@@ -407,7 +418,7 @@ const NavBar = () => {
           </div>
         ))}
       </div>
-      <div className="lg:hidden bg-stone-300 lg:bg-red-600 h-[40px] relative  mx-auto px-[10px] py-[5px] text-base  items-center justify-between  text-gray-500 ">
+      <div className="lg:hidden bg-stone-300 lg:bg-custom-red h-[40px] relative  mx-auto px-[10px] py-[5px] text-base  items-center justify-between  text-gray-500 ">
         {dropdowns.map(({ id, title, items }) => (
           <div
             key={id}
