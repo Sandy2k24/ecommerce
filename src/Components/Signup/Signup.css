@@ -1,0 +1,5 @@
+/* Add this to your global CSS file or within a <style> tag */
+.placeholder-bold::placeholder {
+    font-weight: bold;
+  }
+  
