@@ -18,11 +18,22 @@ import { MdMenu } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 import axios from "axios";
 import SITE_CONFIG from "../controller";
+import Login from "./Login/Login";
 const NavBar = () => {
-  const [islogin, setIslogin] = useState(true);
+  const [islogin, setIslogin] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [openLogin, setOpenLogin] = useState(false);
+   let auth = localStorage.getItem('AuthToken');
+    let user= localStorage.getItem('User')
+    useEffect(()=>{
+      if(auth && user){
+        setIslogin(true)
+      }else{
+        setIslogin(false)
+      }
+    },[])
   // const handleDropdownToggle = (event) => {
   //   const dropdownMenu = event.currentTarget.nextElementSibling;
   //   dropdownMenu.classList.toggle("hidden");
@@ -196,7 +207,13 @@ const NavBar = () => {
   const handleClick = (id) => {
     setOpenDropdown(openDropdown === id ? null : id);
   };
+  const handleLogin = ()=>{
+      setOpenLogin(true)
+  }
+  
   return (
+    <>
+    <Login openLogin={openLogin} setOpenLogin={setOpenLogin} setIslogin={setIslogin}/>
     <nav className=" no-scrollbar bg-red-600 lg:bg-gray-100 fixed z-30 w-full">
       <div className=" bg-red-600 lg:bg-gray-100  h-[58px] lg:h-[70px] container mx-auto flex items-center justify-between lg:justify-evenly px-[12px] lg:px-[40px] gap-20  ">
         {/* Toggle Icon for Mobile View */}
@@ -320,8 +337,8 @@ const NavBar = () => {
                 </a>
               ) : (
                 <a
-                  href="/login"
                   className="inline-flex items-center gap-2  lg:text-black"
+                  onClick={handleLogin}
                 >
                   <span>
                     <FaUser className=" text-black" />
@@ -437,6 +454,7 @@ const NavBar = () => {
         ))}
       </div>
     </nav>
+    </>
   );
 };
 

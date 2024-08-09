@@ -1,14 +1,117 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Signup.css'
+import SITE_CONFIG from "../../controller.js";
+import axios from 'axios';
+import { countries } from 'countries-list';
+function Signup({openSignup,setOpenSignup,setIslogin}) {
+  // const [openSignup, setOpenSignup] = useState(true);
+  const countryCodes = Object.keys(countries).map((code) => ({
+    code: `+${countries[code].phone}`,
+    label: `${countries[code].name} (+${countries[code].phone})`,
+  }));
+  const genderOptions = [
+    { id: "1", value: 'male'},
+    { id: "0", value: 'female' },
+    { id: "2", value: 'other'}
+];
 
-function Signup() {
-  const [isOpen, setIsOpen] = useState(true);
-
+  const [credentials, setCredentials] = useState({ first_name: "",
+  last_name: '',
+  email: "",
+  mobile: '', 
+  password: "",
+  country_code: "", 
+  gender: "" ,
+  type: "user",
+  status: "",
+  lat: "",
+  lng: "",
+  cover: "",
+  verified: "1",
+  "date": new Date().toDateString,
+  address: "[]"
+  })
   const closePopup = () => {
-    setIsOpen(false);
+    setOpenSignup(false);
   };
+  useEffect(() => {
+    let auth = localStorage.getItem('AuthToken');
+    let user= localStorage.getItem('User')
+    if(auth && user){
+      setIslogin(true);
+      closePopup();
+    }else{
+      setIslogin(false)
+    }
+  }, [])
+  const handleOpenLogin = () =>{
+    setOpenSignup(false)
+  }
+  const handleOnChange = (e) => {
+    setCredentials({ ...credentials, [e.target.name]: e.target.value })
+  }
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    let phoneRegex = /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[789]\d{9}$/gm;
+    let emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    try {
+      if (!credentials.email && !credentials.first_name && !credentials.password && !credentials.mobile && !credentials.last_name) {
+        console.error("All fields are required", { autoClose: 500, theme: 'colored' })
+      }
+      else if (credentials.first_name.length < 1 || credentials.last_name.length < 1) {
+        console.error("Please enter valid name", { autoClose: 500, theme: 'colored' })
+      }
+      else if (emailRegex.test(credentials.email)===false) {
+        console.error("Please enter valid email", { autoClose: 500, theme: 'colored' })
+      }
+      else if (phoneRegex.test(credentials.mobile)===false) {
+        console.error("Please enter a valid phone number", { autoClose: 500, theme: 'colored' })
+        console.log(1);
+      }
+      else if (credentials.password.length < 5) {
+        console.error("Please enter password with more than 5 characters", { autoClose: 500, theme: 'colored' })
+      }
+      else if (credentials.gender==="") {
+        console.error("Please select the gender", { autoClose: 500, theme: 'colored' })
+      }
+      else if (credentials.email && credentials.first_name && credentials.last_name && credentials.mobile && credentials.password) {
+        
+        const sendAuth = await axios.post(`${SITE_CONFIG.apiIPMongo}/api/admin/register`,      
+          {
+            first_name: credentials.first_name,
+            last_name: credentials.last_name,
+            email: credentials.email,
+            mobile: credentials.mobile,
+            password: credentials.password,
+            country_code:credentials.country_code,
+            gender:credentials.gender
+          },{
+            headers:{
+              Authorization:`Bearer ${SITE_CONFIG.apiToken}`
+            }
+          })
+          
+        const receive = await sendAuth.data
+        if (receive.success === true) {
+          // console.success("Registered Successfully", { autoClose: 500, theme: 'colored' })
+          // setIslogin(true)
+          closePopup();
+          
+        }
+        else {
+          console.log();
+          
+          console.error("Something went wrong, Please try again", { autoClose: 500, theme: 'colored' })
+          
+        }
+      }
+    } catch (error) {
+      console.error("Error Occured Please Try again later", { autoClose: 500, theme: 'colored' })
 
-  if (!isOpen) return null; // Don't render if the popup is closed
+    }
+
+  }
+  if (!openSignup) return null; // Don't render if the popup is closed
 
   return (
     <div className="fixed inset-0 flex items-start justify-center bg-gray-800 bg-opacity-50 z-50 p-9 ">
@@ -24,13 +127,15 @@ function Signup() {
           <h3 className="text-lg font-bold">Signup</h3>
         </div>
 
-        <form noValidate className="p-3 space-y-3">
+        <form noValidate onSubmit={handleSubmit} className="p-3 space-y-3">
           <div className="space-y-3">
             <input
               type="email"
               name="email"
               spellCheck="false"
               autoCapitalize="off"
+              value={credentials.email}
+              onChange={handleOnChange}
               required
               className="w-[90%] p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 placeholder-bold"
               placeholder="Email"
@@ -39,6 +144,8 @@ function Signup() {
             <input
               type="password"
               name="password"
+              value={credentials.password}
+              onChange={handleOnChange}
               required
               className="w-[90%] p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 placeholder-bold"
               placeholder="Password"
@@ -46,7 +153,9 @@ function Signup() {
             <p className="text-red-500 hidden">Password is required</p>
             <input
               type="text"
-              name="full_name"
+              name="first_name"
+                  value={credentials.first_name}
+                  onChange={handleOnChange}
               spellCheck="false"
               autoCapitalize="off"
               required
@@ -56,7 +165,9 @@ function Signup() {
             <p className="text-red-500 hidden">First Name is required</p>
             <input
               type="text"
-              name="lname"
+              name="last_name"
+                  value={credentials.last_name}
+                  onChange={handleOnChange}
               spellCheck="false"
               autoCapitalize="off"
               required
@@ -66,17 +177,25 @@ function Signup() {
             <p className="text-red-500 hidden">Last Name is required</p>
             <div className="flex space-x-4">
               <select
-                name="ccode"
+                name="country_code"
+                value={credentials.country_code}
+                onChange={handleOnChange}
                 spellCheck="false"
                 autoCapitalize="off"
                 required
                 className="w-[27%] p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
               >
                 {/* options */}
+                {countryCodes.map((option,index) => (
+                    
+                    <option key={index} value={option.code}>{option.label}</option>
+                  ))}
               </select>
               <input
                 type="number"
-                name="phone"
+                name="mobile"
+                value={credentials.mobile}
+                onChange={handleOnChange}
                 required
                 className="w-[60%] p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 placeholder-bold"
                 placeholder="Mobile Number"
@@ -86,13 +205,15 @@ function Signup() {
 
             <select
               name="gender"
+              value={credentials.gender}
+              onChange={handleOnChange}
               required
               className="w-[90%] p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2"
             >
-              <option value="" disabled selected>Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
+              <option value="" disabled >Select Gender</option>
+              <option value="1">Male</option>
+              <option value="0">Female</option>
+              <option value="2">Other</option>
             </select>
 
             <div className="flex items-start space-x-2 mb-1 w-[]">
@@ -110,7 +231,7 @@ function Signup() {
 
             <div className="flex justify-end">
               <p className="text-gray-600 text-sm">
-                or <span className="text-red-500 hover:cursor-pointer">create an account</span>
+                or <span className="text-red-500 hover:cursor-pointer" onClick={handleOpenLogin}>login to your account</span>
               </p>
             </div>
 
