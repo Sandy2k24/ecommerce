@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import logo from "../assets/logo.png";
 import {
@@ -16,6 +16,8 @@ import { RiInformation2Fill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import { MdMenu } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
+import axios from "axios";
+import SITE_CONFIG from "../controller";
 const NavBar = () => {
   const [islogin, setIslogin] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -36,15 +38,101 @@ const NavBar = () => {
     navigate(path);
     setIsMenuOpen(false);
   };
+
+
+
+
+  const [menuItems, setMenuItems] = useState([]);
+
+  // Fetch categories
+  const fetchCategories = async () => {
+   try {
+     const response = await axios.get(`${SITE_CONFIG.apiIP}/api/menu`, {
+       headers: {
+         Authorization: `Bearer ${SITE_CONFIG.apiToken}`,
+       },
+     });
+     console.log(response.data)
+     return response.data;
+   } catch (error) {
+     console.error('Error fetching categories:', error);
+     setError('Failed to fetch categories.');
+   }
+ };
+
+  
+  const fetchSubcategories = async (category) => {
+   try {
+     const response = await axios.get(`${SITE_CONFIG.apiIP}/api/subcategory?category=${category}`, {
+       headers: {
+         Authorization: `Bearer ${SITE_CONFIG.apiToken}`,
+       },
+     });
+     return response.data;
+   } catch (error) {
+     console.error('Error fetching subcategories:', error);
+   }
+ };
+
+ // Build menuItems from categories and subcategories
+ const buildMenuItems = async () => {
+   try {
+     const categories = await fetchCategories();
+     if (!categories) return;
+     const activeCategories = categories.filter(category => category.status === 'active');
+     setCategory(activeCategories)
+     const items = await Promise.all(activeCategories.map(async (category) => {
+       const subcategories = await fetchSubcategories(category.name);
+       return {
+         category: category.name,
+         subcategories: subcategories?.filter(sub => sub.status === 'active').map(sub => sub) || [],
+       };
+     }));
+
+     setMenuItems(items);
+   } catch (err) {
+     console.log(err)
+   } 
+ };
+
+ useEffect(() => {
+   buildMenuItems();
+ }, []);
+
+
+
+
+
   const Dropdown = ({ items }) => (
-    <div className="absolute right-0 min-w-48 mt-2 z-3 origin-top-right bg-black  text-white">
+    <div className="absolute right-0 min-w-48 mt-2 origin-top-right bg-black  text-white">
       {items.map((item, index) => (
-        <a key={index} href={item.href} className="block p-2 text-white ">
+        <Link key={index} to={item.href} className="block p-2 text-white ">
           {item.text}
-        </a>
+        </Link>
       ))}
     </div>
   );
+
+
+
+  // const getAllProducts = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       ${apiIPMongo}/api/product,
+  //       {},
+  //       {
+  //         headers: {
+  //           Authorization: Bearer ${apiToken},
+  //         },
+  //       }
+  //     );
+  //     setProducts(response.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+
   const dropdowns = [
     {
       id: 1,
@@ -103,7 +191,7 @@ const NavBar = () => {
     setOpenDropdown(openDropdown === id ? null : id);
   };
   return (
-    <nav className="bg-red-600 lg:bg-gray-100">
+    <nav className=" no-scrollbar bg-red-600 lg:bg-gray-100 fixed z-30 w-full">
       <div className=" bg-red-600 lg:bg-gray-100  h-[58px] lg:h-[70px] container mx-auto flex items-center justify-between lg:justify-evenly px-[12px] lg:px-[40px] gap-20  ">
         {/* Toggle Icon for Mobile View */}
         <button

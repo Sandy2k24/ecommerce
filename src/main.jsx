@@ -15,6 +15,7 @@ import ErrorPage from './Components/ErrorPage';
 import HomePage from './Pages/Home/HomePage';
 import Catalogue from './Pages/Catalogue/Catalogue';
 import Cart from './Pages/Cart/Cart.jsx';
+import ProductPage from './Pages/ProductPage/ProductPage'
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,11 @@ const router = createBrowserRouter([
       {
         path: "catalogue",
         element:<Catalogue />
+      }
+      ,
+      {
+        path: "productpage",
+        element:<ProductPage />
       }
     ]
   },
