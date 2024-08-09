@@ -10,6 +10,8 @@ import {
 } from "@heroicons/react/24/solid";
 import { SubCatHome } from "./SubCatHome.jsx";
 import { FeatureItem } from "./FeatureItem.jsx";
+import axios from "axios";
+import SITE_CONFIG from "../../controller.js";
 
 const images = [
   "http://13.127.97.224/images/goatrack-31.jpg",
@@ -17,81 +19,14 @@ const images = [
   "http://13.127.97.224/images/455604204slider-image3.jpg",
 ];
 
-const categories = [
-  {
-    id: 1,
-    title: "Category 1",
-    imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlJ7DjXXnxeODU1wdJd08ZOb-AD6zxra6XLQ&s",
-  },
-  {
-    id: 2,
-    title: "Category 2",
-    imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlJ7DjXXnxeODU1wdJd08ZOb-AD6zxra6XLQ&s",
-  },
-  {
-    id: 3,
-    title: "Category 3",
-    imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlJ7DjXXnxeODU1wdJd08ZOb-AD6zxra6XLQ&s",
-  },
-  {
-    id: 4,
-    title: "Category 4",
-    imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlJ7DjXXnxeODU1wdJd08ZOb-AD6zxra6XLQ&s",
-  },
-  {
-    id: 5,
-    title: "Category 5",
-    imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlJ7DjXXnxeODU1wdJd08ZOb-AD6zxra6XLQ&s",
-  },
-  {
-    id: 6,
-    title: "Category 6",
-    imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlJ7DjXXnxeODU1wdJd08ZOb-AD6zxra6XLQ&s",
-  },
-  {
-    id: 7,
-    title: "Category 7",
-    imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlJ7DjXXnxeODU1wdJd08ZOb-AD6zxra6XLQ&s",
-  },
-  {
-    id: 8,
-    title: "Category 8",
-    imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlJ7DjXXnxeODU1wdJd08ZOb-AD6zxra6XLQ&s",
-  },
-];
+const heading=["chicken","ox tail"]
 
-const heading = ["CHICKEN", "LAMB", "GOAT", "BEEF", "MINCE"];
 
-const subCategories = [
-  {
-    id: 1,
-    title: "All Chicken",
-    imageUrl: "http://13.127.97.224/images/whole_chicken_1.jpg",
-  },
-  {
-    id: 2,
-    title: "Chicken Boneless",
-    imageUrl: "http://13.127.97.224/images/whole_chicken_1.jpg",
-  },
-  {
-    id: 3,
-    title: "Marinated Chicken",
-    imageUrl: "http://13.127.97.224/images/whole_chicken_1.jpg",
-  },
-];
 
 const HomePage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentCategoryPage, setCurrentCategoryPage] = useState(0);
-
+  const [category,setCategory]=useState([])
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prevSlide) => (prevSlide + 1) % images.length);
@@ -111,7 +46,7 @@ const HomePage = () => {
   };
 
   const handleCategoryPageChange = (direction) => {
-    const totalPages = Math.ceil(categories.length / 6);
+    const totalPages = Math.ceil(category.length / 6);
     if (direction === "next") {
       setCurrentCategoryPage((prevPage) => (prevPage + 1) % totalPages);
     } else {
@@ -125,10 +60,69 @@ const HomePage = () => {
     alert("Button clicked!");
   };
 
-  const displayedCategories = categories.slice(
+  const displayedCategories = category.slice(
     currentCategoryPage * 6,
     (currentCategoryPage + 1) * 6
   );
+
+  
+  const [menuItems, setMenuItems] = useState([]);
+
+   // Fetch categories
+   const fetchCategories = async () => {
+    try {
+      const response = await axios.get(`${SITE_CONFIG.apiIP}/api/category`, {
+        headers: {
+          Authorization: `Bearer ${SITE_CONFIG.apiToken}`,
+        },
+      });
+    
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+   
+   const fetchSubcategories = async (category) => {
+    try {
+      const response = await axios.get(`${SITE_CONFIG.apiIP}/api/subcategory?category=${category}`, {
+        headers: {
+          Authorization: `Bearer ${SITE_CONFIG.apiToken}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching subcategories:', error);
+    }
+  };
+
+  // Build menuItems from categories and subcategories
+  const buildMenuItems = async () => {
+    try {
+      const categories = await fetchCategories();
+      if (!categories) return;
+      const activeCategories = categories.filter(category => category.status === 'active');
+      setCategory(activeCategories)
+      const items = await Promise.all(activeCategories.map(async (category) => {
+        const subcategories = await fetchSubcategories(category.name);
+        return {
+          category: category.name,
+          subcategories: subcategories?.filter(sub => sub.status === 'active').map(sub => sub) || [],
+        };
+      }));
+
+      setMenuItems(items);
+    } catch (err) {
+      console.log(err)
+    } 
+  };
+
+  useEffect(() => {
+    buildMenuItems();
+  }, []);
+
+
 
   return (
     <>
@@ -223,16 +217,16 @@ const HomePage = () => {
           <div className="flex flex-nowrap overflow-x-auto scrollbar-hide">
             {displayedCategories.map((category) => (
               <div
-                key={category.id}
+                key={category._id}
                 className="p-10 rounded-lg flex flex-col items-center sm:w-50 flex-shrink-0"
               >
                 <img
-                  src={category.imageUrl}
+                  src={`${SITE_CONFIG.apiIP}/images/${category.cover}`}
                   alt="Category"
                   className="w-40 h-40 rounded-full object-cover mb-4"
                 />
                 <h2 className="text-md font-semibold text-center">
-                  {category.title}
+                  {category.name}
                 </h2>
               </div>
             ))}
@@ -274,11 +268,11 @@ const HomePage = () => {
 
       {/* Subcategory section */}
       <div className="relative overflow-hidden py-8 my-8">
-        {heading.map((heading, key) => (
+        {menuItems.map((item, i) => (
           <SubCatHome
-            key={key}
-            heading={heading}
-            subCategories={subCategories}
+            key={i}
+            heading={item.category}
+            subCategories={item.subcategories}
           />
         ))}
       </div>
