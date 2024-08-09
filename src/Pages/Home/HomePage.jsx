@@ -12,6 +12,7 @@ import { SubCatHome } from "./SubCatHome.jsx";
 import { FeatureItem } from "./FeatureItem.jsx";
 import axios from "axios";
 import SITE_CONFIG from "../../controller.js";
+import { useSelector } from "react-redux";
 
 const slides = [
   {
@@ -94,10 +95,14 @@ const HomePage = () => {
     }
   };
 
-   
+  const storeId = useSelector((state) => state.store.selectedStore);
+  console.log(storeId)
    const fetchSubcategories = async (category) => {
     try {
-      const response = await axios.get(`${SITE_CONFIG.apiIP}/api/subcategory?category=${category}`, {
+      const response = await axios.post(`${SITE_CONFIG.apiIP}/api/admin/getsubcategorybysidandcid`, {
+        store_id:storeId,
+        category:category
+      },{
         headers: {
           Authorization: `Bearer ${SITE_CONFIG.apiToken}`,
         },
@@ -131,7 +136,7 @@ const HomePage = () => {
 
   useEffect(() => {
     buildMenuItems();
-  }, []);
+  }, [storeId]);
 
 
 
@@ -258,27 +263,6 @@ const HomePage = () => {
         </div>
       </div>
 
-            {/* Banner Section */}
-            <div className="flex flex-wrap py-6">
-        <div className="w-full md:w-1/2 flex items-center justify-center">
-          <img
-            className="w-full h-auto max-h-60 object-cover"
-            src="http://13.127.97.224/images/whole_chicken_1.jpg"
-            alt="Chicken Drumsticks"
-          />
-        </div>
-      </div>
-
-      {/* Subcategories */}
-      <div className="relative overflow-hidden my-8">
-        {menuItems.map((item, index) => (
-          <SubCatHome
-            key={index}
-            heading={item.category}
-            subCategories={item.subcategories}
-          />
-        ))}
-      </div>
 
       {/* Featured Items */}
       <div className="flex flex-col md:flex-row md:gap-6 gap-10 md:justify-between m-8">
@@ -302,6 +286,17 @@ const HomePage = () => {
           title="Support"
           description="431-695-219"
         />
+      </div>
+
+             {/* Banner Section */}
+             <div className="flex flex-wrap py-6">
+        <div className="w-full md:w-1/2 flex items-center justify-center">
+          <img
+            className="w-full h-auto max-h-60 object-cover"
+            src="http://13.127.97.224/images/whole_chicken_1.jpg"
+            alt="Chicken Drumsticks"
+          />
+        </div>
       </div>
 
       {/* Subcategory section */}

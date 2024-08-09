@@ -2,15 +2,15 @@ import React from "react";
 import SITE_CONFIG from "../../controller";
 
 export const SubCatHome = ({ heading, subCategories }) => {
-  // console.log(subCategories)
+  console.log(subCategories)
   return (
     <>
-      <h1
+      {subCategories.length===0?"":<h1
         className="text-center font-mont md:text-xl font-semibold mb-4 p-2 bg-gray-400 uppercase text-sm"
         style={{ backgroundColor: "#f3f3f3" }}
       >
         {heading}
-      </h1>
+      </h1>}
       <div className="flex justify-center flex-col h-auto md:h-auto">
         <div className="flex flex-wrap gap-4 p-1">
           {subCategories.map((subCategory, index) => (

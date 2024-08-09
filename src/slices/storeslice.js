@@ -9,6 +9,7 @@ const storeSlice = createSlice({
   reducers: {
     selectStore: (state, action) => {
       state.selectedStore = action.payload;
+      console.log(action.payload)
     },
   },
 });

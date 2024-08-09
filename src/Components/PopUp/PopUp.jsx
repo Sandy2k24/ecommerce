@@ -1,15 +1,26 @@
 import { useState } from "react";
 import './PopUp.css'
 import { NavLink } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { selectStore } from '../../slices/storeslice';
 
 function PopUp() {
   const [isOpen, setIsOpen] = useState(true); // State to manage popup visibility
-
+ 
+  const dispatch = useDispatch()
   const closePopup = () => {
-    setIsOpen(false); // Set the popup to be closed when the cross button is clicked
+    setIsOpen(false); 
   };
 
   if (!isOpen) return null; // If the popup is not open, don't render it
+
+
+  
+const handleSelectStore = (storeId) => {
+  dispatch(selectStore(storeId)); 
+  closePopup(); 
+}
+
 
   return (
     <>
@@ -43,7 +54,9 @@ function PopUp() {
               <p className="text-sm text-[#6c757d]">
                 Shop 13/326 Great Western Hwy,..
               </p>
-              <button className="btan addcart p-2">Select</button>
+              <button
+               onClick={() => handleSelectStore(1)}
+                className="btan addcart p-2">Select</button>
             </div>
           </div>
 
@@ -62,7 +75,11 @@ function PopUp() {
               <p className="text-sm text-[#6c757d]">
                 838A Pittwater Rd Dee Why NSW ..
               </p>
-              <button className="btan addcart p-2">Select</button>
+              <button
+               onClick={() => handleSelectStore(2)} 
+               
+               className="btan addcart p-2">Select</button>
+
             </div>
           </div>
         </div>
