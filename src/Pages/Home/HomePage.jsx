@@ -138,7 +138,7 @@ const HomePage = () => {
   return (
     <>
       {/* Image Carousel */}
-      <div className="relative w-full overflow-hidden" style={{ height: "50vh" }}>
+      <div className="relative w-full overflow-hidden" style={{ height: "40vh" }}>
         {/* Carousel Container */}
         <div
           className="relative flex transition-transform duration-500"
@@ -156,7 +156,7 @@ const HomePage = () => {
               />
               {/* Heading Overlay */}
               {slide.headingImg && (
-                <h1 className="absolute left-1/2 top-1/4 transform -translate-x-1/2 -translate-y-1/2 text-white text-xs md:text-sm lg:text-lg xl:text-2xl font-bold bg-opacity-50 p-2 rounded">
+                <h1 className="absolute left-1/2 top-1/4 pb-4 transform -translate-x-1/2 -translate-y-1/2 text-white text-xs md:text-base lg:text-lg xl:text-2xl font-bold bg-opacity-50 rounded">
                   {slide.headingImg}
                 </h1>
               )}
