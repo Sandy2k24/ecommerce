@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import logo from "../assets/logo.png";
 import {
@@ -13,9 +13,11 @@ import {
 import { MdArrowDropDown, MdAccountCircle, MdEmail } from "react-icons/md";
 import { RxCross1 } from "react-icons/rx";
 import { RiInformation2Fill } from "react-icons/ri";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MdMenu } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
+import axios from "axios";
+import SITE_CONFIG from "../controller";
 const NavBar = () => {
   const [islogin, setIslogin] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -36,74 +38,166 @@ const NavBar = () => {
     navigate(path);
     setIsMenuOpen(false);
   };
+
+
+
+
+    const [dropdowns, setDropdowns] = useState([]);
+   
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          // Fetch categories and store data concurrently
+          const [categoriesResponse, storeResponse] = await Promise.all([
+            axios.get(`${SITE_CONFIG.apiIP}/api/menu`, {
+              headers: { Authorization: `Bearer ${SITE_CONFIG.apiToken}` },
+            }),
+            axios.get(`${SITE_CONFIG.apiIP}/api/storedata`, {
+              headers: { Authorization: `Bearer ${SITE_CONFIG.apiToken}` },
+            }),
+          ]);
+  
+          // Extract data from responses
+          const categories = JSON.parse(categoriesResponse.data[0].menu);
+          const store = storeResponse.data;
+  
+          // Fetch subcategories for each category
+          const subcategoryPromises = categories.map((category) =>
+            axios.get(`${SITE_CONFIG.apiIP}/api/subcategory?category=${category.name}`, {
+              headers: { Authorization: `Bearer ${SITE_CONFIG.apiToken}` },
+            })
+          );
+  
+          const subcategoryResponses = await Promise.all(subcategoryPromises);
+          const dropdownsData = [];
+  console.log(store)
+          // Add store data
+         
+
+            dropdownsData.push({
+              id: store[0]._id,
+              title: store[0].name,
+              items: store.map((store_name) => ({ text: store_name.name, href: "/" })),
+            });
+  
+          // Add categories and subcategories
+          categories.forEach((category, index) => {
+            const subcategories = subcategoryResponses[index].data;
+            dropdownsData.push({
+              id: category._id,
+              title: category.name,
+              items: subcategories.map((sub) => ({
+                text: sub.name,
+                href: `/#/subcategory/${sub.name}`,
+              })),
+            });
+          });
+          console.log(dropdownsData)
+          setDropdowns(dropdownsData);
+        
+        } catch (err) {
+         console.log(err)
+        }
+      };
+  
+      fetchData();
+    }, []);
+  
+
+
+
+
+
   const Dropdown = ({ items }) => (
-    <div className="absolute right-0 min-w-48 mt-2 z-3 origin-top-right bg-black  text-white">
+    <div className="absolute right-0 min-w-48 mt-2 z-50 origin-top-right bg-black text-white">
       {items.map((item, index) => (
-        <a key={index} href={item.href} className="block p-2 text-white ">
+        <Link key={index} to={item.href} className="block p-2 text-white ">
           {item.text}
-        </a>
+        </Link>
       ))}
     </div>
   );
-  const dropdowns = [
-    {
-      id: 1,
-      title: "Green Farm Product Dee Why",
-      items: [
-        { text: "Green Farm Products Wentworthville" },
-        { text: "Green Farm Product Dee Why" },
-      ],
-    },
-    {
-      id: 2,
-      title: "CHICKEN",
-      items: [
-        { text: "ALL CHICKEN", href: "#" },
-        { text: "CHICKEN BONELESS", href: "#" },
-        { text: "MARINATED CHICKEN", href: "#" },
-      ],
-    },
-    {
-      id: 3,
-      title: "GOAT",
-      items: [
-        { text: "GOAT CHOPS", href: "#" },
-        { text: "GOAT WITH BONES", href: "#" },
-        { text: "GOAT BONELESS", href: "#" },
-        { text: "GOAT CUTS", href: "#" },
-      ],
-    },
-    {
-      id: 4,
-      title: "LAMB",
-      items: [
-        { text: "LAMB CHOPS", href: "#" },
-        { text: "LAMB CUTS", href: "#" },
-        { text: "LAMB WITH BONES", href: "#" },
-        { text: "LAMB BONELESS", href: "#" },
-        { text: "vvv", href: "#" },
-      ],
-    },
-    {
-      id: 5,
-      title: "PRAWNS",
-      items: [{ text: "PRAWNS PACKED", href: "#" }],
-    },
-    {
-      id: 6,
-      title: "FISH",
-      items: [
-        { text: "BASA FILLET", href: "#" },
-        { text: "bbbb", href: "#" },
-      ],
-    },
-  ];
+
+
+
+  // const getAllProducts = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       ${apiIPMongo}/api/product,
+  //       {},
+  //       {
+  //         headers: {
+  //           Authorization: Bearer ${apiToken},
+  //         },
+  //       }
+  //     );
+  //     setProducts(response.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+
+  // const dropdowns = [
+  //   {
+  //     id: 1,
+  //     title: "Green Farm Product Dee Why",
+  //     items: [
+  //       { text: "Green Farm Products Wentworthville" },
+  //       { text: "Green Farm Product Dee Why" },
+  //     ],
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "CHICKEN",
+  //     items: [
+  //       { text: "ALL CHICKEN", href: "/cat" },
+  //       { text: "CHICKEN BONELESS", href: "#" },
+  //       { text: "MARINATED CHICKEN", href: "#" },
+  //     ],
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "GOAT",
+  //     items: [
+  //       { text: "GOAT CHOPS", href: "#" },
+  //       { text: "GOAT WITH BONES", href: "#" },
+  //       { text: "GOAT BONELESS", href: "#" },
+  //       { text: "GOAT CUTS", href: "#" },
+  //     ],
+  //   },
+  //   {
+  //     id: 4,
+  //     title: "LAMB",
+  //     items: [
+  //       { text: "LAMB CHOPS", href: "#" },
+  //       { text: "LAMB CUTS", href: "#" },
+  //       { text: "LAMB WITH BONES", href: "#" },
+  //       { text: "LAMB BONELESS", href: "#" },
+  //       { text: "vvv", href: "#" },
+  //     ],
+  //   },
+  //   {
+  //     id: 5,
+  //     title: "PRAWNS",
+  //     items: [{ text: "PRAWNS PACKED", href: "#" }],
+  //   },
+  //   {
+  //     id: 6,
+  //     title: "FISH",
+  //     items: [
+  //       { text: "BASA FILLET", href: "#" },
+  //       { text: "bbbb", href: "#" },
+  //     ],
+  //   },
+  // ];
 
   const handleClick = (id) => {
     setOpenDropdown(openDropdown === id ? null : id);
   };
   return (
-    <nav className="bg-red-600 lg:bg-gray-100">
+    <nav className=" no-scrollbar bg-red-600 lg:bg-gray-100 fixed z-30 w-full">
       <div className=" bg-red-600 lg:bg-gray-100  h-[58px] lg:h-[70px] container mx-auto flex items-center justify-between lg:justify-evenly px-[12px] lg:px-[40px] gap-20  ">
         {/* Toggle Icon for Mobile View */}
         <button
@@ -276,19 +370,23 @@ const NavBar = () => {
           </div>
 
           {/* Button for big screens (bove 1024px) */}
+          <Link to={`/ecommerce/cart`}>
           <button className="hidden lg:inline-flex items-center gap-2 text-black  ">
             <span>
               <FaShoppingCart />
             </span>
             Cart
           </button>
+          </Link>
 
           {/* Button for small screens (below 1024px) */}
+          <Link to={`/ecommerce/cart`}>
           <button className="inline-flex lg:hidden items-center text-white">
             <span className="text-xl ">
               <FaShoppingCart />
             </span>
           </button>
+          </Link>
         </div>
       </div>
 
@@ -304,9 +402,9 @@ const NavBar = () => {
       </div>
 
       <div className="hidden lg:flex bg-gray-100 lg:bg-red-600 h-[50px] relative space-x-4  items-center justify-between lg:justify-evenly text-white  text-base px-[40px]">
-        {dropdowns.map(({ id, title, items }) => (
+        {dropdowns.map(({ id, title, items },i) => (
           // <div key={id} className={`relative ${id === 1 ? 'block lg:hidden' : ' hidden lg:block'}`}>
-          <div key={id} className="relative ">
+          <div key={i} className="relative ">
             <button
               className="flex items-center gap-2 "
               onClick={() => handleClick(id)}
@@ -320,9 +418,9 @@ const NavBar = () => {
         ))}
       </div>
       <div className="lg:hidden bg-stone-300 lg:bg-red-600 h-[40px] relative  mx-auto px-[10px] py-[5px] text-base  items-center justify-between  text-gray-500 ">
-        {dropdowns.map(({ id, title, items }) => (
+        {dropdowns.map(({ id, title, items },i) => (
           <div
-            key={id}
+            key={i}
             className={`relative ${
               id === 1 ? "block lg:hidden" : " hidden lg:block"
             }`}

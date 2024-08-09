@@ -6,9 +6,10 @@
   .accordion-menu h2 {
     font-size: 18px;
     font-weight: bold;
-    margin-bottom: 15px;
+    margin-top: 15px;
     border-bottom: 1px solid #ccc;
     padding-bottom: 5px;
+    padding-left: 10px;
   }
   
   .accordion-menu ul {
@@ -19,11 +20,12 @@
   .accordion-menu .menu-item {
     cursor: pointer;
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid #ccc;
     transition: all 0.3s ease;
+    gap: 10px;
   }
   
   .accordion-menu .menu-item.active {
