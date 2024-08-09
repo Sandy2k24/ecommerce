@@ -35,8 +35,8 @@ export const Catalogue = () => {
 
   return (
     <>
-      <div className="container">
-        <div className="row lg:mx-[50px] lg:px-[15px] pt-[108px] lg:pt-[130px]">
+      <div className="container ">
+        <div className="row lg:mx-[50px] lg:px-[15px]  ">
           <div className="col-3 hidden lg:inline-block">
             {/*------------ Accordion Menu ----------------*/}
             <AccordionMenu />

@@ -36,7 +36,7 @@ else{
       {/* <Signup/> */}
       {/* <ForgetPass/> */}
       {/* <Menu /> */}
-      <div id="detail" style={{ paddingTop: "120px" }}>
+      <div className=" pt-[139px] lg:pt-[140px]" id="detail">
         <Outlet />
       </div>
       <Footer />
