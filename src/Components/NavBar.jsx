@@ -37,7 +37,7 @@ const NavBar = () => {
     setIsMenuOpen(false);
   };
   const Dropdown = ({ items }) => (
-    <div className="absolute right-0 min-w-48 mt-2 z-3 origin-top-right bg-black  text-white">
+    <div className="absolute right-0 min-w-48 mt-2 z-50 origin-top-right bg-black  text-white">
       {items.map((item, index) => (
         <a key={index} href={item.href} className="block p-2 text-white ">
           {item.text}
@@ -103,7 +103,7 @@ const NavBar = () => {
     setOpenDropdown(openDropdown === id ? null : id);
   };
   return (
-    <nav className="bg-red-600 lg:bg-gray-100">
+    <nav className=" no-scrollbar overflow-y-auto bg-red-600 lg:bg-gray-100 fixed z-30 w-full">
       <div className=" bg-red-600 lg:bg-gray-100  h-[58px] lg:h-[70px] container mx-auto flex items-center justify-between lg:justify-evenly px-[12px] lg:px-[40px] gap-20  ">
         {/* Toggle Icon for Mobile View */}
         <button

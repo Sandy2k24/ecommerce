@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
-import PopUp from "./Components/PopUp/PopUp"
-import NavBar from './Components/NavBar';
-import Footer from './Components/Footer';
+import PopUp from "./Components/PopUp/PopUp";
+import NavBar from "./Components/NavBar";
+import Footer from "./Components/Footer";
 
 export default function App() {
   const [showPopup, setShowPopup] = useState(true);
