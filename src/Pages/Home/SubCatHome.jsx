@@ -1,6 +1,8 @@
 import React from 'react'
+import SITE_CONFIG from '../../controller'
 
 export const SubCatHome = ({heading, subCategories}) => {
+  // console.log(subCategories)
   return (
     <>
     <h1
@@ -11,18 +13,18 @@ export const SubCatHome = ({heading, subCategories}) => {
         </h1>
         <div className="flex justify-center flex-col h-auto md:h-auto">
           <div className="flex flex-wrap gap-4 p-1">
-            {subCategories.map((subCategory) => (
+            {subCategories.map((subCategory,index) => (
               <div
-                key={subCategory.id}
+                key={index}
                 className="flex flex-col items-center w-40 sm:w-48 p-1"
               >
                 <img
-                  src={subCategory.imageUrl}
+                  src={`${SITE_CONFIG.apiIP}/images/${subCategory.cover}`}
                   alt="Subcategory"
                   className="w-32 h-32 rounded-full object-cover mb-4"
                 />
                 <h2 className="text-sm font-mont font-custom-700 text-center">
-                  {subCategory.title}
+                  {subCategory.name}
                 </h2>
               </div>
             ))}
