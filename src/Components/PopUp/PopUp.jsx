@@ -1,5 +1,6 @@
 import { useState } from "react";
 import './PopUp.css'
+import { NavLink } from "react-router-dom";
 
 function PopUp() {
   const [isOpen, setIsOpen] = useState(true); // State to manage popup visibility
@@ -28,13 +29,13 @@ function PopUp() {
         <hr />
         <div className="flex flex-col md:flex-row justify-center gap-6 p-4">
           <div className="bg-white border border-gray-300 p-4 w-full md:w-60 relative group">
-            <div className="mb-4">
+            <NavLink className="mb-4">
               <img
                 src="https://lavishlook.in/onlinestore/api/uploads/Wenty.jpg"
                 alt="Store 1"
                 className="w-full h-32 object-cover rounded-lg"
               />
-            </div>
+            </NavLink>
             <div className="text-center">
               <p className="text-sm text-[#6c757d]">
                 Green Farm Products Wentworthville NSW
@@ -42,18 +43,18 @@ function PopUp() {
               <p className="text-sm text-[#6c757d]">
                 Shop 13/326 Great Western Hwy,..
               </p>
-              <div className="btan addcart p-2">Select</div>
+              <button className="btan addcart p-2">Select</button>
             </div>
           </div>
 
           <div className="bg-white border border-gray-300 p-4 w-full md:w-60 relative group">
-            <div className="mb-4">
+            <NavLink className="mb-4">
               <img
                 src="https://lavishlook.in/onlinestore/api/uploads/deewhy.jpg"
                 alt="Store 2"
                 className="w-full h-32 object-cover rounded-lg"
               />
-            </div>
+            </NavLink>
             <div className="text-center">
               <p className="text-sm text-[#6c757d]">
                 Green Farm Products Dee Why NSW
@@ -61,7 +62,7 @@ function PopUp() {
               <p className="text-sm text-[#6c757d]">
                 838A Pittwater Rd Dee Why NSW ..
               </p>
-              <div className="btan addcart p-2">Select</div>
+              <button className="btan addcart p-2">Select</button>
             </div>
           </div>
         </div>
