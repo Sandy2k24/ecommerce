@@ -4,6 +4,7 @@ import "swiper/css/pagination";
 import "./styles.css";
 import { Pagination } from "swiper/modules";
 import AccordionMenu from "./AccordionMenu/AccordionMenu";
+import Card from "../../Components/Card/Card";
 
 export const Catalogue = () => {
   return (
@@ -44,6 +45,7 @@ export const Catalogue = () => {
               </SwiperSlide>
             </Swiper>
           </div>
+          <Card/>
         </div>
       </div>
     </>

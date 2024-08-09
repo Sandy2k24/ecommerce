@@ -20,7 +20,7 @@ export default function App() {
       {showPopup && <PopUp />}
       {/* all the other elements */}
       <NavBar />
-      <Card/>
+      {/* <Card/> */}
       {/* <Login/> */}
       {/* <Signup/> */}
       {/* <ForgetPass/> */}
